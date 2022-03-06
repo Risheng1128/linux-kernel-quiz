@@ -1,3 +1,8 @@
+/**
+ * @file    problem3.c
+ * @brief   使用 linux kernel 的 linked list 實作 LRU Cache
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
@@ -135,7 +140,7 @@ void lRUCachePut(LRUCache *obj, int key, int value)
 
 /** 
  * @fn     - main
- * @brief  - 測試 Cache 的功能是否正常
+ * @brief  - 測試 Cache 的功能是否正確
  * 
  * @attention
  * 範例參考 146.LRU Cache (https://leetcode.com/problems/lru-cache/)
