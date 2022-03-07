@@ -6,12 +6,15 @@
 CC = gcc
 CFLAGS = -O1 -g -Wall -Werror -IInclude
 
-TARGET := quiz1/problem4.c
+TARGET := quiz2/problem1.c
 EXE = $(patsubst %.c,%.out,$(notdir $(TARGET)))
 
 $(EXE): $(TARGET)
 	$(CC) $(CFLAGS) -o $@ $^ -lm
 	./$(EXE)
 
+disasm: $(EXE)
+	objdump -d $^ > $(patsubst %.out,%.d,$(EXE))
+
 clean:
-	rm *.out
+	-rm *.out *.d
