@@ -11,23 +11,22 @@ uint32_t average1(uint32_t low, uint32_t high)
     return low + (high - low) / 2;
 }
 
-uint32_t average4(uint32_t low, uint32_t high)
+uint32_t average2(uint32_t a, uint32_t b)
 {
-    return high - (high - low) / 2;
+    return (a >> 1) + (b >> 1) + (a & b & 1U);
 }
 
-// uint32_t average2(uint32_t a, uint32_t b)
-// {
-//     return (a >> 1) + (b >> 1) + (EXP1);
-// }
-
-// uint32_t average3(uint32_t a, uint32_t b)
-// {
-//     return (EXP2) + ((EXP3) >> 1);
-// }
+uint32_t average3(uint32_t a, uint32_t b)
+{
+    return (a & b) + ((a ^ b) >> 1);
+}
 
 int main(void)
 {
-   uint32_t low = 3, high = 5;
-   printf("%x\n", average1(low, high));
+   uint32_t a = 3, b = 5;
+   printf("test1 = %x\n", average(a, b));
+   printf("test2 = %x\n", average1(a, b));
+   printf("test3 = %x\n", average2(a, b));
+   printf("test4 = %x\n", average3(a, b));
+   return 0;
 }
