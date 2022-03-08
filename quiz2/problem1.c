@@ -1,3 +1,8 @@
+/**
+ * @file    problem1.c
+ * @brief   兩數平均的各種實作
+ */
+
 #include <stdio.h>
 #include <stdint.h>
 
