@@ -12,7 +12,7 @@
 /* Rem 結構 */
 struct rem_node {
     int key;   // 紀錄餘數
-    int index; // 紀錄位數
+    int index; // 紀錄小數點位數
     struct list_head link;
 };
 
@@ -41,6 +41,22 @@ static int find(struct list_head *heads, int size, int key)
 }
 
 /** 
+ * @fn     - free_ht
+ * @brief  - 釋放 hash table
+ */
+static void free_ht(struct list_head *heads, int size)
+{
+    struct rem_node *node, *next;
+    for (int i = 0; i < size; i++) {
+        list_for_each_entry_safe (node, next, &heads[i], link) {
+            list_del(&node->link);
+            free(node);
+        }
+    }
+    free(heads);
+}
+
+/** 
  * @fn     - fractionToDecimal
  * @brief  - 回傳兩整數除完的數值 (利用字串表示小數)
  * 
@@ -50,7 +66,9 @@ static int find(struct list_head *heads, int size, int key)
  * 3. 如果 denominator 或 numerator 有負數，則先變回正數
  * 4. 先做第一次的除法，處理整數位，如果沒有餘數則直接回傳
  * 5. 開啟大小為 size 的 hash table
- *
+ * 6. 開始進行除法計算
+ * 7. 如果整除則會離開迴圈，並把 decimal 的資料複製給 p
+ * 8. 如果出現無限迴圈會進入 if(pos >= 0)
  */
 char *fractionToDecimal(int numerator, int denominator)
 {
@@ -76,13 +94,13 @@ char *fractionToDecimal(int numerator, int denominator)
     long long d = denominator;
 
     /* deal with negtive cases */
-    if (n < 0)
-        n = -n;
-    if (d < 0)
-        d = -d;
+    int mask = n >> 31;
+    n = (n + mask) ^ mask;
+    mask = d >> 31;
+    d = (d + mask) ^ mask;
 
-    bool sign = (float) numerator / denominator >= 0;
-    if (!sign)
+    bool sign = (numerator < 0) ^ (denominator < 0);
+    if (sign)
         *p++ = '-';
     
     // 先做第一次的除法，處理整數位
@@ -109,17 +127,23 @@ char *fractionToDecimal(int numerator, int denominator)
     for (int i = 0; i < size; i++)
         INIT_LIST_HEAD(&heads[i]);
 
+    // 開始進行除法計算
     for (int i = 0; remainder; i++) {
         int pos = find(heads, size, remainder);
-        // 無窮小數
+        // 出現無窮小數的情況
         if (pos >= 0) {
+            q = decimal;
+            // 先加上不是循環小數的部份
             while (pos-- > 0)
                 *p++ = *decimal++;
             *p++ = '(';
+            // 加上循環小數的部份 用 "()" 括住
             while (*decimal != '\0')
                 *p++ = *decimal++;
             *p++ = ')';
             *p = '\0';
+            free_ht(heads, size);
+            free(q);
             return result;
         }
         struct rem_node *node = malloc(sizeof(*node));
@@ -127,19 +151,30 @@ char *fractionToDecimal(int numerator, int denominator)
         node->index = i; // 紀錄位數
 
         list_add(&node->link, &heads[remainder % size]);
-        printf("remainder = %lld\n", remainder);
-        *q++ = (remainder * 10) / d + '0';
-        remainder = (remainder * 10) % d;
+        *q++ = (remainder * 10) / d + '0'; // 新的小數點位數
+        remainder = (remainder * 10) % d;  // 新的餘數
     }
-
+    // 已經整除
     strcpy(p, decimal);
+    free_ht(heads, size);
+    free(decimal);
     return result;
 }
 
-int main(void)
+void Comput_and_Display(int numerator, int denominator)
 {
-    int numerator = 4, denominator = 333;
     char* res = fractionToDecimal(numerator, denominator);
     printf("res = %s\n", res);
+    free(res);
+}
+
+/** 
+ * @fn     - main
+ * @brief  - 測試 fractionToDecimal 的正確性
+ */
+int main(void)
+{
+    Comput_and_Display(1, 2);
+    Comput_and_Display(4, 333);
     return 0;
 }
