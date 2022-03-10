@@ -48,7 +48,7 @@ void bitwise(void)
         printf("length = %d\n", length);
 
         char fmt[9];
-        strncpy(fmt, &"FizzBuzz'%u'"[(9 >> div5) >> (div3 << 2)], length);
+        strncpy(fmt, &"FizzBuzz%u"[(8 >> div5) >> (div3 << 2)], length);
         fmt[length] = '\0';
 
         printf(fmt, i);
@@ -58,7 +58,7 @@ void bitwise(void)
 
 int main()
 {
-    // naive();
+    naive();
     bitwise();
     return 0;
 }
