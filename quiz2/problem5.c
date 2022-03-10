@@ -171,6 +171,8 @@ void Comput_and_Display(int numerator, int denominator)
 /** 
  * @fn     - main
  * @brief  - 測試 fractionToDecimal 的正確性
+ * 
+ * @attention 參考 166. Fraction to Recurring Decimal (https://leetcode.com/problems/fraction-to-recurring-decimal/)
  */
 int main(void)
 {
