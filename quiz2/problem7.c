@@ -36,8 +36,8 @@ static inline bool is_divisible(uint32_t n, uint64_t M)
     return n * M <= M - 1;
 }
 
-static uint64_t M3 = UINT64_C(0xFFFFFFFFFFFFFFFF) / 3 + 1; // 0x55555555555555556
-static uint64_t M5 = UINT64_C(0xFFFFFFFFFFFFFFFF) / 5 + 1; // 0x33333333333333334
+static uint64_t M3 = UINT64_C(0xFFFFFFFFFFFFFFFF) / 3 + 1; // 0x5555555555555556
+static uint64_t M5 = UINT64_C(0xFFFFFFFFFFFFFFFF) / 5 + 1; // 0x3333333333333334
 
 void bitwise(void)
 {
@@ -45,9 +45,15 @@ void bitwise(void)
         uint8_t div3 = is_divisible(i, M3);
         uint8_t div5 = is_divisible(i, M5);
         unsigned int length = (2 << div3) << div5;
-        printf("length = %d\n", length);
 
         char fmt[9];
+        /** 
+         * (8 >> div5) >> (div3 << 2) 有四種可能
+         * 1, 為 0 時，如果 length 為 8 ，印出 FizzBuzz
+         * 2. 為 0 時，如果 length 為 4 ，印出 Fizz
+         * 3. 為 4 時，印出 Buzz
+         * 4. 為 8 時，此時 fmt = "%u"，並利用 printf(fmt, i) 印出 i (當前數字)
+         */
         strncpy(fmt, &"FizzBuzz%u"[(8 >> div5) >> (div3 << 2)], length);
         fmt[length] = '\0';
 
