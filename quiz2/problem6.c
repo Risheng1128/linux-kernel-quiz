@@ -1,6 +1,6 @@
 /**
  * @file    problem6.c
- * @brief   類似 __alignof__ 的實作
+ * @brief   類似 __alignof__ (https://gcc.gnu.org/onlinedocs/gcc/Alignment.html) 的實作
  */
 
 #include <stdio.h>
