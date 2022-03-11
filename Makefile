@@ -6,7 +6,7 @@
 CC = gcc
 CFLAGS = -O1 -g -Wall -Werror -IInclude
 
-TARGET := quiz2/problem1.c
+TARGET := quiz3/problem1.c
 EXE = $(patsubst %.c,%.out,$(notdir $(TARGET)))
 
 $(EXE): $(TARGET)
