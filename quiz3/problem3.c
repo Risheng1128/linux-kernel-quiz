@@ -9,15 +9,18 @@
 
 uint8_t rev8(uint8_t x)
 {
-    x = (x >> 4) | (x << 4);               
-    x = ((x & 0xCC) >> 2) | ((x << 2) & 0xCC);
-    x = ((x & 0xAA) >> 1) | ((x << 1) & 0xAA);
+    // 將低 4 位元和高 4 位元互換位置
+    x = (x >> 4) | (x << 4);
+    // 將 8-bit 看成兩個部份 (4, 4), 分別將兩部份的高 2 位元和低 2 位元交換
+    x = ((x & 0xCC) >> 2) | ((x & 0x33) << 2);
+    // 將兩部份的奇數和偶數位元交換
+    x = ((x & 0xAA) >> 1) | ((x & 0x55) << 1);
     return x;
 }
 
 int main(void)
 {
-    uint8_t a = 0x55;
+    uint8_t a = 0x87;
     printf("ans = %x\n", rev8(a));
     return 0;
 }
