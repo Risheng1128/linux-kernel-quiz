@@ -13,7 +13,7 @@
 #define foreach_int(i, ...)                                            \
     for (unsigned _foreach_i = (((i) = ((int[]){__VA_ARGS__})[0]), 0); \
          _foreach_i < sizeof((int[]){__VA_ARGS__}) / sizeof(int);      \
-         (i) = ((int[]){__VA_ARGS__, 0})[_foreach_i++])
+         (i) = ((int[]){__VA_ARGS__, 0})[++_foreach_i])
 
 #define foreach_ptr(i, ...)                                                 \
     for (unsigned _foreach_i =                                              \
