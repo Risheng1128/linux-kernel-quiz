@@ -11,12 +11,22 @@ int divide(int dividend, int divisor)
 {
     int signal = 1;
     unsigned int dvd = dividend;
+    /** 
+     * 判斷 dividend 是否小於 0
+     * 如果是，將 signal 變號 (可用 bitwise 優化)
+     * 如果是，利用 2's complement 將 dvd 從負數編碼變成正數 
+     */
     if (dividend < 0) {
         signal *= -1;
         dvd = ~dvd + 1;
     }
 
     unsigned int dvs = divisor;
+    /** 
+     * 判斷 divisor 是否小於 0
+     * 如果是，將 signal 變號 (可用 bitwise 優化)
+     * 如果是，利用 2's complement 將 dvs 從負數編碼變成正數 
+     */
     if (divisor < 0) {
         signal *= -1;
         dvs = ~dvs + 1;
@@ -29,9 +39,9 @@ int divide(int dividend, int divisor)
     unsigned int res = 0;
     while (dvd >= dvs) {
         while (dvd < (dvs << shift))
-            shift--;                         
+            shift--;
         res |= (unsigned int) 1 << shift;
-        dvd >>= dvs;
+        dvd -= dvs << shift;
     }
 
     if (signal == 1 && res >= INT_MAX)
