@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <limits.h>
 
+/**
+ *  @fn     divide()
+ *  @brief  回傳兩個有號整數的除法
+ */
 int divide(int dividend, int divisor)
 {
     int signal = 1;
@@ -33,19 +37,25 @@ int divide(int dividend, int divisor)
     }
 
     int shift = 0;
+    // 計算 dvs << shift 最接近 dvd 但大於等於 dvd 的 shift 數值
     while (dvd > (dvs << shift))
         shift++;
 
     unsigned int res = 0;
     while (dvd >= dvs) {
+        // 計算 dvs << shift 最接近 dvd 但小於等於 dvd 的 shift 數值
         while (dvd < (dvs << shift))
             shift--;
+        // res += 2^shift (加上每一次迭代的商)
         res |= (unsigned int) 1 << shift;
+        // 將 dvd 減去商乘上除數
         dvd -= dvs << shift;
     }
 
+    // 如果 signal 為 1 表示結果為正數，但商也大於 INT_MAX 時進入，直接回傳 INT_MAX
     if (signal == 1 && res >= INT_MAX)
         return INT_MAX;
+    // 回傳整數的商 (要乘上正負號)
     return res * signal;
 }
 
