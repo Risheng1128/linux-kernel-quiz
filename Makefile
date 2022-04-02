@@ -14,7 +14,7 @@ $(EXE): $(TARGET)
 	./$(EXE)
 
 disasm: $(EXE)
-	objdump -d $^ > $(patsubst %.out,%.d,$(EXE))
+	objdump -d -M att $^ > $(patsubst %.out,%.d,$(EXE))
 
 clean:
 	-rm *.out *.d
