@@ -83,7 +83,7 @@ int longestConsecutive(int *nums, int n_size)
             // 分別往比較小和比較大的值開始尋找
             int left = num, right = num;
             // 往比較小的值開始找
-            while ((node = find(++left, n_size, heads))) {
+            while ((node = find(--left, n_size, heads))) {
                 len++;
                 // 如果存在就 remove
                 list_del(&node->link);
