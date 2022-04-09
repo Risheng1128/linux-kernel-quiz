@@ -8,7 +8,7 @@
 
 int ilog32(uint32_t v)
 {
-    int ret = v >= 0;
+    int ret = v > 0;
     /**
      * 如果 v > 0xFFFFU ，表示 v 需要至少使用 16 個位元儲存，此時 m = 16
      * 如果 v <= 0xFFFFU，表示 v 不需要用到 16 個位元儲存，此時 m = 0
