@@ -15,6 +15,7 @@
 #define N_ITERS 20
 #define ARRAY_SIZE(x) sizeof(x) / sizeof(*x)
 
+// 共享資料
 typedef struct {
     unsigned int v1, v2, v3;
 } config_t;
@@ -44,8 +45,10 @@ static void print_config(const char *name, const config_t *conf)
 
 void init()
 {
+    // 建立共享資料，且初始 (v1,v2,v3) = (0,0,0)
     shared_config = create_config();
-    config_dom = domain_new(delete_config);
+    // Create a new domain on the heap
+    config_dom = domain_new((void *)delete_config);
     if (!config_dom)
         err(EXIT_FAILURE, "domain_new");
 }
@@ -100,20 +103,28 @@ int main()
 
     /* Start threads */
     for (size_t i = 0; i < ARRAY_SIZE(readers); ++i) {
+        // 使用 pthread_create 建立 reader threads 其執行函式為 reader_thread
+        // pthread_create 成功回傳 0，失敗則回傳 error number
         if (pthread_create(readers + i, NULL, reader_thread, NULL))
             warn("pthread_create");
     }
     for (size_t i = 0; i < ARRAY_SIZE(writers); ++i) {
+        // 使用 pthread_create 建立 writer threads 其執行函式為 write_thread
+        // pthread_create 成功回傳 0，失敗則回傳 error number
         if (pthread_create(writers + i, NULL, writer_thread, NULL))
             warn("pthread_create");
     }
 
     /* Wait for threads to finish */
     for (size_t i = 0; i < ARRAY_SIZE(readers); ++i) {
+        // 使用 pthread_join 等待 reader thread 結束
+        // pthread_join 成功回傳 0，失敗回傳 error number
         if (pthread_join(readers[i], NULL))
             warn("pthread_join");
     }
     for (size_t i = 0; i < ARRAY_SIZE(writers); ++i) {
+                // 使用 pthread_join 等待 writer thread 結束
+        // pthread_join 成功回傳 0，失敗回傳 error number
         if (pthread_join(writers[i], NULL))
             warn("pthread_join");
     }
