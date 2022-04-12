@@ -6,8 +6,8 @@
 #define DEFER_DEALLOC 1
 
 typedef struct {
-    hp_t *pointers;
-    hp_t *retired;
+    hp_t *pointers; // hazard pointers
+    hp_t *retired;  // retire list
     void (*deallocator)(void *);
 } domain_t;
 
