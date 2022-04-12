@@ -18,3 +18,6 @@ NCKU 2022 Linux kernel internel quiz homework
 
 ## quiz6
 [2022q1 第 6 週測驗題](https://hackmd.io/@sysprog/linux2022-quiz6)
+
+## quiz8
+[2022q1 第 8 週測驗題](https://hackmd.io/@sysprog/linux2022-quiz8)
