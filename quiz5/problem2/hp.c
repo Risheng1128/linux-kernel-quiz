@@ -11,6 +11,7 @@ static hp_t *list_append(hp_t **head, uintptr_t ptr)
     new->ptr = ptr;
     hp_t *old = atomic_load(head);
 
+    // 將節點加在 linked list 的頭
     do {
         new->next = old;
     } while (!atomic_cas(head, &old, &new));
@@ -30,7 +31,7 @@ hp_t *list_insert_or_append(hp_t **head, uintptr_t ptr)
         uintptr_t expected = atomic_load(&node->ptr);
         /* atomic_cas: 判斷 node->ptr 和 expected 是否相等
          * 若相等則回傳 1，反之則回傳 0
-         * 如果相同表示該資料已經存在於 hazard pointer 裡，因此 不需要創新的空間
+         * 如果相同表示該資料已經存在於 hazard pointer 裡，因此不需要創新的空間
          */
         if (expected == 0 && atomic_cas(&node->ptr, &expected, &ptr)) {
             need_alloc = false;
@@ -51,6 +52,7 @@ bool list_remove(hp_t **head, uintptr_t ptr)
 
     LIST_ITER (head, node) {
         uintptr_t expected = atomic_load(&node->ptr);
+        // if 如果成立，nullptr 複製到 node->ptr，即移除節點並回傳 true
         if (expected == ptr && atomic_cas(&node->ptr, &expected, &nullptr))
             return true;
     }
