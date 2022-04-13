@@ -1,4 +1,5 @@
 #include "hp.h"
+#include <stdio.h>
 
 /* Allocate a new node with specified value and append to list */
 static hp_t *list_append(hp_t **head, uintptr_t ptr)
@@ -27,6 +28,10 @@ hp_t *list_insert_or_append(hp_t **head, uintptr_t ptr)
 
     LIST_ITER (head, node) {
         uintptr_t expected = atomic_load(&node->ptr);
+        /* atomic_cas: 判斷 node->ptr 和 expected 是否相等
+         * 若相等則回傳 1，反之則回傳 0
+         * 如果相同表示該資料已經存在於 hazard pointer 裡，因此 不需要創新的空間
+         */
         if (expected == 0 && atomic_cas(&node->ptr, &expected, &ptr)) {
             need_alloc = false;
             break;
@@ -35,7 +40,6 @@ hp_t *list_insert_or_append(hp_t **head, uintptr_t ptr)
 
     if (need_alloc)
         node = list_append(head, ptr);
-
     return node;
 }
 
