@@ -1,5 +1,6 @@
 
 #include "domain.h"
+#include <stdio.h>
 
 /* Create a new domain on the heap */
 domain_t *domain_new(void (*deallocator)(void *))
@@ -19,10 +20,10 @@ void domain_free(domain_t *dom)
         return;
 
     if (dom->pointers)
-        list_free(&dom->pointers);
+        list_free(&dom->pointers); // 釋放 hazard pointer
 
     if (dom->retired)
-        list_free(&dom->retired);
+        list_free(&dom->retired); // 釋放 retired list
 
     free(dom);
 }
@@ -37,6 +38,7 @@ uintptr_t load(domain_t *dom, const uintptr_t *prot_ptr)
 
     while (1) {
         uintptr_t val = atomic_load(prot_ptr);
+        // 判斷 val 所擁有的資料是否已經在 hazard pointer 裡
         hp_t *node = list_insert_or_append(&dom->pointers, val);
         if (!node)
             return 0;
