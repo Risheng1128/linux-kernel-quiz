@@ -92,6 +92,7 @@ static void cleanup_ptr(domain_t *dom, uintptr_t ptr, int flags)
  */
 void swap(domain_t *dom, uintptr_t *prot_ptr, uintptr_t new_val, int flags)
 {
+    // new_val 寫進 prot_ptr，並回傳舊的 prot_ptr 給 old_obj
     const uintptr_t old_obj = atomic_exchange(prot_ptr, new_val);
     cleanup_ptr(dom, old_obj, flags);
 }
