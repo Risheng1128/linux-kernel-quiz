@@ -34,6 +34,7 @@ struct lfring {
 
 lfring_t *lfring_alloc(uint32_t n_elems, uint32_t flags)
 {
+    // 指定 ringsz 為 n_elems 往上對齊 2 的倍數
     unsigned long ringsz = ROUNDUP_POW2(n_elems);
     if (n_elems == 0 || ringsz == 0 || ringsz > 0x80000000) {
         assert(0 && "invalid number of elements");
@@ -43,7 +44,7 @@ lfring_t *lfring_alloc(uint32_t n_elems, uint32_t flags)
         assert(0 && "invalid flags");
         return NULL;
     }
-
+    // queue 總大小
     size_t nbytes = sizeof(lfring_t) + ringsz * sizeof(struct element);
     lfring_t *lfr = osal_alloc(nbytes, CACHE_LINE);
     if (!lfr)
@@ -114,17 +115,20 @@ uint32_t lfring_enqueue(lfring_t *lfr,
 
     if (lfr->flags & LFRING_FLAG_SP) { /* single-producer */
         ringidx_t head = __atomic_load_n(&lfr->head, __ATOMIC_ACQUIRE);
+        // 實際上剩下多少空間，可容納 n_elems 或是 head + size - tail (容量不足時)
         actual = MIN((intptr_t)(head + size - tail), (intptr_t) n_elems);
         if (actual <= 0)
             return 0;
-
+        // 根據 actual 數值新增資料
         for (uint32_t i = 0; i < (uint32_t) actual; i++) {
             assert(lfr->ring[tail & mask].idx == tail - size);
             lfr->ring[tail & mask].ptr = *elems++;
             lfr->ring[tail & mask].idx = tail;
             tail++;
         }
+        // 將 tail 更新
         __atomic_store_n(&lfr->tail, tail, __ATOMIC_RELEASE);
+        // 回傳實際儲存多少筆資料
         return (uint32_t) actual;
     }
 
