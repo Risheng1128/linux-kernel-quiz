@@ -21,6 +21,7 @@ deps := $(OBJS:%.o=.%.o.d)
 lfring: $(OBJS)
 	$(VECHO) "  LD\t$@\n"
 	$(Q)$(CC) $(LDFLAGS) -o $@ $^
+	./$@
 
 %.o: %.c
 	@mkdir -p .$(DUT_DIR)
