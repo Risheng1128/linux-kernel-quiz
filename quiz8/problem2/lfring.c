@@ -134,6 +134,7 @@ uint32_t lfring_enqueue(lfring_t *lfr,
 
     /* else: lock-free multi-producer */
 restart:
+    // 判斷是否還有空間儲存資料
     while ((uint32_t) actual < n_elems &&
            before(tail, __atomic_load_n(&lfr->head, __ATOMIC_ACQUIRE) + size)) {
         union {
@@ -141,6 +142,7 @@ restart:
             ptrpair_t pp;
         } old, neu;
         void *elem = elems[actual];
+        // 取得要寫入的資料地址
         struct element *slot = &lfr->ring[tail & mask];
         old.e.ptr = __atomic_load_n(&slot->ptr, __ATOMIC_RELAXED);
         old.e.idx = __atomic_load_n(&slot->idx, __ATOMIC_RELAXED);
@@ -162,7 +164,12 @@ restart:
             neu.e.ptr = elem;
             neu.e.idx = tail; /* Set idx on enqueue */
         } while (!lf_compare_exchange((ptrpair_t *) slot, &old.pp, neu.pp));
-
+        /**
+         * 重新判斷 slot 和 old.pp 是否相同
+         * 如果相同表示沒有其他執行序影響 slot ，因此將 neu.pp 複製到 slot 並離開迴圈
+         * 如果不同表示已經有其他執行序修改 slot ，因此將 slot 複製到 old.pp 並重新執行一次
+         */
+        
         /* Enqueue succeeded */
         actual++;
         tail++; /* Continue with next slot */
@@ -182,7 +189,7 @@ static inline ringidx_t find_tail(lfring_t *lfr, ringidx_t head, ringidx_t tail)
     ringidx_t mask = lfr->mask;
     ringidx_t size = /* XXXXX */ mask + 1;
     while (before(tail, head + size) &&
-           __atomic_load_n(/* XXXXX */ &size, __ATOMIC_ACQUIRE) ==
+           __atomic_load_n(/* XXXXX */ &lfr->ring[tail & mask].idx, __ATOMIC_RELAXED) ==
                tail)
         tail++;
     tail = cond_update(&lfr->tail, tail);
@@ -200,6 +207,7 @@ uint32_t lfring_dequeue(lfring_t *lfr,
     ringidx_t head = __atomic_load_n(&lfr->head, __ATOMIC_RELAXED);
     ringidx_t tail = __atomic_load_n(&lfr->tail, __ATOMIC_ACQUIRE);
     do {
+        // 實際上有多少筆資料，可以取得 n_elems 或 tail - head (資料不足)
         actual = MIN((intptr_t)(tail - head), (intptr_t) n_elems);
         if (UNLIKELY(actual <= 0)) {
             /* Ring buffer is empty, scan for new but unreleased elements */
@@ -208,10 +216,13 @@ uint32_t lfring_dequeue(lfring_t *lfr,
             if (actual <= 0)
                 return 0;
         }
+        // 將資料複製到 elems
         for (uint32_t i = 0; i < (uint32_t) actual; i++)
             elems[i] = lfr->ring[(head + i) & mask].ptr;
+        // Memory barrier
         smp_fence(LoadStore);                        // Order loads only
         if (UNLIKELY(lfr->flags & LFRING_FLAG_SC)) { /* Single-consumer */
+            // 移動 head ，往後移動 actual 個資料
             __atomic_store_n(&lfr->head, head + actual, __ATOMIC_RELAXED);
             break;
         }
@@ -221,6 +232,11 @@ uint32_t lfring_dequeue(lfring_t *lfr,
         &lfr->head, &head, /* Updated on failure */
         /* XXXXX */ head + actual,
         /* weak */ false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
+    /**
+     * 重新判斷 lfr->head 和 head 是否相同
+     * 如果相同表示沒有其他執行序影響 lfr->head ，因此將 head + actual 複製到 lfr->head 並離開迴圈
+     * 如果不同表示已經有其他執行序修改 lfr->head ，因此將 lfr->head 複製到 head 並重新執行一次
+     */
     *index = (uint32_t) head;
     return (uint32_t) actual;
 }
