@@ -34,6 +34,11 @@ static inline bool lf_compare_exchange(register __int128 *var,
 {
     union u128 cmp = {.ui = *exp}, with = {.ui = neu};
     bool ret;
+    /**
+     * 1. cmp.s.hi:cmp.s.lo 和 *var 比較
+     * 2. 如果相同，set ZF 且 with.s.hi:with.s.lo 複製到 *var
+     * 3. 如果不同, clear ZF 且 *var 複製到 cmp.s.hi:cmp.s.lo
+     */
     __asm__ __volatile__("lock cmpxchg16b %1\n\tsetz %0"
                          : "=q"(ret), "+m"(*var), "+d"(cmp.s.hi), "+a"(cmp.s.lo)
                          : "c"(with.s.hi), "b"(with.s.lo)
