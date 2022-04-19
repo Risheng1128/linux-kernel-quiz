@@ -18,4 +18,5 @@ check:
 	dmesg > out
 
 clean:
-	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean out
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) clean
+	rm out
