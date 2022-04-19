@@ -21,7 +21,7 @@ int main(void)
     char str[STRSIZE];
     const char target = '4';
     struct timespec start, end;
-    long long origin_time = 0, opt_time;
+    long long origin_time, opt_time, x86_time;
 
     memset(str, '0', STRSIZE - 1);
     str[STRSIZE - 1] = '\0';
@@ -38,8 +38,11 @@ int main(void)
         clock_gettime(CLOCK_MONOTONIC, &end);
         opt_time = elapse(&start, &end);
 
-        printf("%lld %lld\n", origin_time, opt_time);
-        origin_time = opt_time = 0;
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        x86_memchr(str, target, STRSIZE - 1);
+        clock_gettime(CLOCK_MONOTONIC, &end);
+        x86_time = elapse(&start, &end);
+        printf("%lld %lld %lld\n", origin_time, opt_time, x86_time);
         str[i] = '0';
     }
     return 0;

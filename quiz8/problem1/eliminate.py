@@ -4,19 +4,19 @@ import numpy as np
 
 def process(datas, samples, threshold = 2):
     datas = np.array(datas)
-    res = np.zeros((samples, 2))
+    res = np.zeros((samples, 3))
     # 分別計算 time_origin 及 time_opt 的平均
-    mean = [datas[:,0].mean(), datas[:,1].mean()]
+    mean = [datas[:,0].mean(), datas[:,1].mean(), datas[:,2].mean()]
     # 分別計算 time_origin 及 time_opt 的標準差
-    std = [datas[:,0].std(), datas[:,1].std()]
+    std = [datas[:,0].std(), datas[:,1].std(), datas[:,2].std()]
     cnt = 0 # 計算有幾組資料被捨去
     for i in range(samples):
         for j in range(runs):
             tmp = np.abs((datas[j * samples + i] - mean) / std) # 計算資料是多少標準差
             # 如果某一組的某個資料過大，整組捨去
-            if tmp[0] > threshold or tmp[1] > threshold:
+            if tmp[0] > threshold or tmp[1] > threshold or tmp[2] > threshold:
                 cnt += 1
-                datas[j * samples + i] = [0, 0]
+                datas[j * samples + i] = [0, 0, 0]
             res[i] += datas[j * samples + i]
         res[i] /= (runs - cnt) # 剩下的資料取平均
         cnt = 0 # count 歸 0

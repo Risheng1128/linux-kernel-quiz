@@ -8,3 +8,4 @@ set xtics 0 ,100, 1000
 plot \
 "final" using :1 with linespoints linewidth 2 title "origin", \
 "final" using :2 with linespoints linewidth 2 title "opt", \
+"final" using :3 with linespoints linewidth 2 title "x86-64", \
