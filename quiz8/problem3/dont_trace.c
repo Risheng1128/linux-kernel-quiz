@@ -14,6 +14,7 @@ MODULE_DESCRIPTION("A kernel module that kills ptrace tracer and its tracees");
 #define DONT_TRACE_WQ_NAME "dont_trace_worker"
 
 static void periodic_routine(struct work_struct *);
+// 建立延時工作任務
 static DECLARE_DELAYED_WORK(dont_trace_task, periodic_routine);
 static struct workqueue_struct *wq;
 static bool loaded;
@@ -70,11 +71,14 @@ static void periodic_routine(struct work_struct *ws)
     if (likely(/* XXXXX: Implement */loaded))
         check();
     /* XXXXX: Implement */;
+    schedule_delayed_work(&dont_trace_task, JIFFIES_DELAY);
 }
 
 static int __init dont_trace_init(void)
 {
+    // 建立一個 workqueue
     wq = create_workqueue(DONT_TRACE_WQ_NAME);
+    // queue work on a workqueue after delay
     queue_delayed_work(wq, &dont_trace_task, JIFFIES_DELAY);
 
     loaded = true;
