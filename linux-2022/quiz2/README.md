@@ -1,1 +1,0 @@
-- [開發日誌(quiz2)](https://hackmd.io/@Risheng/linux2022-quiz2)
