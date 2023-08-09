@@ -1,4 +1,3 @@
-# 配合 quiz2/probem3.c 所寫的腳本
 set title "Time"
 set xlabel "test"
 set ylabel "time(ns)"
