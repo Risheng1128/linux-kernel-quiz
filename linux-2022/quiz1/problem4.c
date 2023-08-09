@@ -13,12 +13,13 @@ struct seq_node {
     struct list_head link;
 };
 
-/** 
+/**
  * @fn     - find
  * @brief  - 尋找資料 num 有沒有存在資料節點 seq_node 上
- * 
+ *
  * @attention 函式邏輯
- * 1. 利用 hash function 算出 hash table (hash) 的位置，這邊的 hash function 為 num < 0 ? -num % size : num % size
+ * 1. 利用 hash function 算出 hash table (hash) 的位置，這邊的 hash function 為
+ * num < 0 ? -num % size : num % size
  * 2. 走訪整個 heads[hash] 接著的 linked list ，尋找資料 num 有沒有存在
  * 3. 如果存在則回傳該節點，沒有則回傳 NULL
  */
@@ -37,14 +38,16 @@ static struct seq_node *find(int num, int size, struct list_head *heads)
     return NULL;
 }
 
-/** 
+/**
  * @fn     - longestConsecutive
  * @brief  - 找到最長的連續序列，回傳其長度
- * 
+ *
  * @attention 函式邏輯
  * 1. 建立整個 hash table ，並初始化
- * 2. 對每一筆資料 num[i] 進行搜尋，如果不存在就建立新的 seq_node 並加到對應的 hash table 上
- * 3. 再次收尋每個資料，找到資料節點後，把該節點 remove，並且分別往比較小和比較大的值開始尋找，直到兩邊都沒有資料
+ * 2. 對每一筆資料 num[i] 進行搜尋，如果不存在就建立新的 seq_node 並加到對應的
+ * hash table 上
+ * 3. 再次收尋每個資料，找到資料節點後，把該節點
+ * remove，並且分別往比較小和比較大的值開始尋找，直到兩邊都沒有資料
  * 4. 找完之後和過去找到的長度比較，若比較長則更新，反之則不變
  */
 int longestConsecutive(int *nums, int n_size)
@@ -67,7 +70,7 @@ int longestConsecutive(int *nums, int n_size)
             list_add(&node->link, &heads[hash]);
         }
     }
-    
+
     // 再次收尋每個資料
     for (int i = 0; i < n_size; i++) {
         int len = 0;
@@ -104,13 +107,14 @@ int longestConsecutive(int *nums, int n_size)
     return length;
 }
 
-/** 
+/**
  * @fn     - main
  * @brief  - 測試 Longest Consecutive Sequence 是否正確
- * 
+ *
  * @attention
- * 範例參考 128. Longest Consecutive Sequence (https://leetcode.com/problems/longest-consecutive-sequence/)
- * 
+ * 範例參考 128. Longest Consecutive Sequence
+ * (https://leetcode.com/problems/longest-consecutive-sequence/)
+ *
  */
 int main(void)
 {

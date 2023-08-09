@@ -3,10 +3,10 @@
  * @brief   回傳比較大的數的各種實作
  */
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
-/** 
+/**
  * @fn     - max_uint32
  * @brief  - 找到無號整數比較大的數
  */
@@ -15,7 +15,7 @@ uint32_t max_uint32(uint32_t a, uint32_t b)
     return a ^ ((a ^ b) & -(a < b));
 }
 
-/** 
+/**
  * @fn     - max_int32
  * @brief  - 找到有號整數比較大的數
  */

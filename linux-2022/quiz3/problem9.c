@@ -13,14 +13,14 @@
 #define ROUND_UP_TO_ALIGNMENT_SIZE(x) \
     (((x) + MAX_ALIGNMENT - 1u) & ~(MAX_ALIGNMENT - 1u))
 
-#define ROUND_DOWN_TO_ALIGNMENT_SIZE(x) \
-    ((x) & ~(MAX_ALIGNMENT - 1u))
+#define ROUND_DOWN_TO_ALIGNMENT_SIZE(x) ((x) & ~(MAX_ALIGNMENT - 1u))
 
 int main(void)
 {
-   printf("x\tUP\tDOWN\n");
-   for (int i = 0; i < 50; i++) {
-      printf("%d\t%d\t%d\n", i, ROUND_UP_TO_ALIGNMENT_SIZE(i), ROUND_DOWN_TO_ALIGNMENT_SIZE(i));
-   }
-   return 0;
+    printf("x\tUP\tDOWN\n");
+    for (int i = 0; i < 50; i++) {
+        printf("%d\t%d\t%d\n", i, ROUND_UP_TO_ALIGNMENT_SIZE(i),
+               ROUND_DOWN_TO_ALIGNMENT_SIZE(i));
+    }
+    return 0;
 }

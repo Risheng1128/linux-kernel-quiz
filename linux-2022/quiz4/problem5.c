@@ -4,8 +4,8 @@
  */
 
 #include <stdint.h>
-#include <string.h>                       
 #include <stdlib.h>
+#include <string.h>
 
 #define __READ_ONCE_SIZE                                  \
     ({                                                    \
@@ -36,7 +36,7 @@ static inline void __read_once_size(const volatile void *p, void *res, int size)
     ({                                              \
         union {                                     \
             typeof(x) __val;                        \
-            DECL0;                            \
+            DECL0;                                  \
         } __u;                                      \
         __read_once_size(&(x), __u.__c, sizeof(x)); \
         __u.__val;                                  \

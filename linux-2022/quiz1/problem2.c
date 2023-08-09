@@ -1,6 +1,7 @@
 /**
  * @file    problem2.c
- * @brief   實作 82. Remove Duplicates from Sorted List II (https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/)
+ * @brief   實作 82. Remove Duplicates from Sorted List II
+ * (https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/)
  */
 
 #include <stdio.h>

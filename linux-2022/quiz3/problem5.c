@@ -4,8 +4,8 @@
  *            參考 https://leetcode.com/problems/divide-two-integers/
  */
 
-#include <stdio.h>
 #include <limits.h>
+#include <stdio.h>
 
 /**
  *  @fn     divide()
@@ -15,10 +15,10 @@ int divide(int dividend, int divisor)
 {
     int signal = 1;
     unsigned int dvd = dividend;
-    /** 
+    /**
      * 判斷 dividend 是否小於 0
      * 如果是，將 signal 變號 (可用 bitwise 優化)
-     * 如果是，利用 2's complement 將 dvd 從負數編碼變成正數 
+     * 如果是，利用 2's complement 將 dvd 從負數編碼變成正數
      */
     if (dividend < 0) {
         signal *= -1;
@@ -26,10 +26,10 @@ int divide(int dividend, int divisor)
     }
 
     unsigned int dvs = divisor;
-    /** 
+    /**
      * 判斷 divisor 是否小於 0
      * 如果是，將 signal 變號 (可用 bitwise 優化)
-     * 如果是，利用 2's complement 將 dvs 從負數編碼變成正數 
+     * 如果是，利用 2's complement 將 dvs 從負數編碼變成正數
      */
     if (divisor < 0) {
         signal *= -1;
@@ -52,7 +52,8 @@ int divide(int dividend, int divisor)
         dvd -= dvs << shift;
     }
 
-    // 如果 signal 為 1 表示結果為正數，但商也大於 INT_MAX 時進入，直接回傳 INT_MAX
+    // 如果 signal 為 1 表示結果為正數，但商也大於 INT_MAX 時進入，直接回傳
+    // INT_MAX
     if (signal == 1 && res >= INT_MAX)
         return INT_MAX;
     // 回傳整數的商 (要乘上正負號)

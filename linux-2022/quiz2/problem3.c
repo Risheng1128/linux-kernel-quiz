@@ -3,18 +3,19 @@
  * @brief   實作輾轉相除法
  */
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
-/** 
+/**
  * @fn     - gcd64
  * @brief  - 找到兩數的最大公因數
  */
 uint64_t gcd64(uint64_t u, uint64_t v)
 {
-    if (!u || !v) return u | v;
+    if (!u || !v)
+        return u | v;
     int shift;
     for (shift = 0; !((u | v) & 1); shift++) {
         u /= 2, v /= 2;
@@ -35,13 +36,14 @@ uint64_t gcd64(uint64_t u, uint64_t v)
     return u << shift;
 }
 
-/** 
+/**
  * @fn     - gcd64_ctz
  * @brief  - 找到兩數的最大公因數，並使用 __builtin_ctz 優化
  */
 uint64_t gcd64_ctz(uint64_t u, uint64_t v)
 {
-    if (!u || !v) return u | v;
+    if (!u || !v)
+        return u | v;
     // 如果兩數都是偶數的話，則可以先將公因數 2 提取出來
     int shift = __builtin_ctz(u | v);
     u >>= shift;
@@ -65,14 +67,15 @@ uint64_t randu64()
 {
     uint64_t res = 0;
     for (int i = 0; i < 64; i++) {
-        res = (res << 1) | (rand() & 1); 
+        res = (res << 1) | (rand() & 1);
     }
     return res;
 }
 
 long long elapse(struct timespec *start, struct timespec *end)
 {
-    return (long long) (end->tv_sec - start->tv_sec) * 1e9 + (long long) (end->tv_nsec - start->tv_nsec);
+    return (long long) (end->tv_sec - start->tv_sec) * 1e9 +
+           (long long) (end->tv_nsec - start->tv_nsec);
 }
 
 int main(void)

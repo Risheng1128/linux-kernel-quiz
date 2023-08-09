@@ -1,6 +1,7 @@
 /**
  * @file    - problem2.c
- * @brief   - 函式 fo_fd 接受指定的地址 v，填入一個 fd 結構體，並確保第一個成員的地址得以對 4 個位元組進行向下對齊
+ * @brief   - 函式 fo_fd 接受指定的地址 v，填入一個 fd
+ * 結構體，並確保第一個成員的地址得以對 4 個位元組進行向下對齊
  */
 
 #include <stdio.h>
@@ -13,7 +14,7 @@ struct fd {
 
 enum {
     FOO_DEFAULT = 0,
-    FOO_ACTION,                           
+    FOO_ACTION,
     FOO_UNLOCK,
 } FOO_FLAGS;
 
@@ -28,5 +29,3 @@ int main(void)
     printf("%p\n", to_fd(address).foo);
     return 0;
 }
-
-

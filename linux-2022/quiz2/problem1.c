@@ -3,8 +3,8 @@
  * @brief   兩數平均的各種實作
  */
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 uint32_t average(uint32_t a, uint32_t b)
 {
@@ -28,10 +28,10 @@ uint32_t average3(uint32_t a, uint32_t b)
 
 int main(void)
 {
-   uint32_t a = 3, b = 5;
-   printf("test1 = %x\n", average(a, b));
-   printf("test2 = %x\n", average1(a, b));
-   printf("test3 = %x\n", average2(a, b));
-   printf("test4 = %x\n", average3(a, b));
-   return 0;
+    uint32_t a = 3, b = 5;
+    printf("test1 = %x\n", average(a, b));
+    printf("test2 = %x\n", average1(a, b));
+    printf("test3 = %x\n", average2(a, b));
+    printf("test4 = %x\n", average3(a, b));
+    return 0;
 }

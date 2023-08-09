@@ -3,9 +3,9 @@
  * @brief   bitmap 應用
  */
 
-#include <stdio.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 size_t improved(uint64_t *bitmap, size_t bitmapsize, uint32_t *out)
@@ -32,7 +32,7 @@ size_t improved(uint64_t *bitmap, size_t bitmapsize, uint32_t *out)
 int main(void)
 {
     uint64_t bitmap[1] = {0xFF};
-    uint32_t* out = malloc(8 * sizeof(uint32_t));
+    uint32_t *out = malloc(8 * sizeof(uint32_t));
     size_t pos = improved(bitmap, 1, out);
     for (size_t i = 0; i < pos; i++) {
         printf("%d\n", *(out + i));

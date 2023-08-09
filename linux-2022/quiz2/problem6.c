@@ -1,6 +1,7 @@
 /**
  * @file    problem6.c
- * @brief   類似 __alignof__ (https://gcc.gnu.org/onlinedocs/gcc/Alignment.html) 的實作
+ * @brief   類似 __alignof__ (https://gcc.gnu.org/onlinedocs/gcc/Alignment.html)
+ * 的實作
  */
 
 #include <stdio.h>
@@ -11,8 +12,13 @@
  *
  * This returns a safe alignment for the given type.
  */
-#define ALIGNOF(t) \
-    ((char *)(&((struct { char c; t _h; } *)0)->_h) - (char *)0)
+#define ALIGNOF(t)          \
+    ((char *) (&((struct {  \
+                    char c; \
+                    t _h;   \
+                } *) 0)     \
+                    ->_h) - \
+     (char *) 0)
 
 int main(void)
 {

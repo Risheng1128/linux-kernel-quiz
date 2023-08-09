@@ -6,8 +6,8 @@
 #define BITS_PER_BYTE 8
 #define BITS_PER_LONG (sizeof(unsigned long) * BITS_PER_BYTE)
 
-#include <stdio.h>
 #include <stddef.h>
+#include <stdio.h>
 
 static inline size_t ffs(unsigned long x)
 {
